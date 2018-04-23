@@ -1,148 +1,52 @@
---- lib/isc/sha2.c.orig
-+++ lib/isc/sha2.c
-@@ -69,7 +69,7 @@
- #endif
+diff --git a/lib/dns/openssldh_link.c b/lib/dns/openssldh_link.c
+index ab2f68a..727d5dd 100644
+--- a/lib/dns/openssldh_link.c
++++ b/lib/dns/openssldh_link.c
+@@ -69,7 +69,7 @@ static isc_result_t openssldh_todns(const dst_key_t *key, isc_buffer_t *data);
  
- #ifdef ISC_PLATFORM_OPENSSLHASH
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- #define EVP_MD_CTX_new() &(context->_ctx)
- #define EVP_MD_CTX_free(ptr) EVP_MD_CTX_cleanup(ptr)
- #define EVP_MD_CTX_reset(c) EVP_MD_CTX_cleanup(c)
---- lib/isc/include/isc/sha2.h.orig
-+++ lib/isc/include/isc/sha2.h
-@@ -84,7 +84,7 @@
+ static BIGNUM *bn2, *bn768, *bn1024, *bn1536;
  
- typedef struct {
- 	EVP_MD_CTX *ctx;
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- 	EVP_MD_CTX _ctx;
- #endif
- } isc_sha2_t;
---- lib/isc/include/isc/hmacmd5.h.orig
-+++ lib/isc/include/isc/hmacmd5.h
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ /*
+  * DH_get0_key, DH_set0_key, DH_get0_pqg and DH_set0_pqg
+  * are from OpenSSL 1.1.0.
+diff --git a/lib/dns/openssldsa_link.c b/lib/dns/openssldsa_link.c
+index 4c2d3e4..5e8096f 100644
+--- a/lib/dns/openssldsa_link.c
++++ b/lib/dns/openssldsa_link.c
+@@ -49,7 +49,7 @@
+ 
+ static isc_result_t openssldsa_todns(const dst_key_t *key, isc_buffer_t *data);
+ 
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ static void
+ DSA_get0_pqg(const DSA *d, const BIGNUM **p, const BIGNUM **q,
+ 	     const BIGNUM **g)
+diff --git a/lib/dns/opensslecdsa_link.c b/lib/dns/opensslecdsa_link.c
+index 9168ec2..a39dadf 100644
+--- a/lib/dns/opensslecdsa_link.c
++++ b/lib/dns/opensslecdsa_link.c
 @@ -42,7 +42,7 @@
  
- typedef struct {
- 	HMAC_CTX *ctx;
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- 	HMAC_CTX _ctx;
- #endif
- } isc_hmacmd5_t;
---- lib/isc/hmacmd5.c.orig
-+++ lib/isc/hmacmd5.c
-@@ -43,7 +43,7 @@
- #endif
+ #define DST_RET(a) {ret = a; goto err;}
  
- #ifdef ISC_PLATFORM_OPENSSLHASH
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- #define HMAC_CTX_new() &(ctx->_ctx), HMAC_CTX_init(&(ctx->_ctx))
- #define HMAC_CTX_free(ptr) HMAC_CTX_cleanup(ptr)
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ /* From OpenSSL 1.1 */
+ static void
+ ECDSA_SIG_get0(const ECDSA_SIG *sig, const BIGNUM **pr, const BIGNUM **ps) {
+diff --git a/lib/dns/opensslrsa_link.c b/lib/dns/opensslrsa_link.c
+index 5dddc2e..74e167b 100644
+--- a/lib/dns/opensslrsa_link.c
++++ b/lib/dns/opensslrsa_link.c
+@@ -121,7 +121,7 @@
  #endif
---- lib/isc/md5.c.orig
-+++ lib/isc/md5.c
-@@ -54,7 +54,7 @@
- #include <isc/util.h>
+ #define DST_RET(a) {ret = a; goto err;}
  
- #ifdef ISC_PLATFORM_OPENSSLHASH
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- #define EVP_MD_CTX_new() &(ctx->_ctx)
- #define EVP_MD_CTX_free(ptr) EVP_MD_CTX_cleanup(ptr)
- #endif
---- lib/isc/hmacsha.c.orig
-+++ lib/isc/hmacsha.c
-@@ -40,7 +40,7 @@
- #endif
- 
- #ifdef ISC_PLATFORM_OPENSSLHASH
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- #define HMAC_CTX_new() &(ctx->_ctx), HMAC_CTX_init(&(ctx->_ctx))
- #define HMAC_CTX_free(ptr) HMAC_CTX_cleanup(ptr)
- #endif
---- lib/isc/include/isc/hmacsha.h.orig
-+++ lib/isc/include/isc/hmacsha.h
-@@ -42,7 +42,7 @@
- 
- typedef struct {
- 	HMAC_CTX *ctx;
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- 	HMAC_CTX _ctx;
- #endif
- } isc_hmacsha_t;
---- lib/isc/include/isc/sha1.h.orig
-+++ lib/isc/include/isc/sha1.h
-@@ -41,7 +41,7 @@
- 
- typedef struct {
- 	EVP_MD_CTX *ctx;
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- 	EVP_MD_CTX _ctx;
- #endif
- } isc_sha1_t;
---- lib/isc/include/isc/md5.h.orig
-+++ lib/isc/include/isc/md5.h
-@@ -60,7 +60,7 @@
- 
- typedef struct {
- 	EVP_MD_CTX *ctx;
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- 	EVP_MD_CTX _ctx;
- #endif
- } isc_md5_t;
---- lib/isc/aes.c.orig
-+++ lib/isc/aes.c
-@@ -33,7 +33,7 @@
- #include <openssl/opensslv.h>
- #include <openssl/evp.h>
- 
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- #define EVP_CIPHER_CTX_new() &(_context), EVP_CIPHER_CTX_init(&_context)
- #define EVP_CIPHER_CTX_free(c) RUNTIME_CHECK(EVP_CIPHER_CTX_cleanup(c) == 1)
- #endif
-@@ -42,7 +42,7 @@
- isc_aes128_crypt(const unsigned char *key, const unsigned char *in,
- 		 unsigned char *out)
- {
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- 	EVP_CIPHER_CTX _context;
- #endif
- 	EVP_CIPHER_CTX *c;
-@@ -62,7 +62,7 @@
- isc_aes192_crypt(const unsigned char *key, const unsigned char *in,
- 		 unsigned char *out)
- {
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- 	EVP_CIPHER_CTX _context;
- #endif
- 	EVP_CIPHER_CTX *c;
-@@ -82,7 +82,7 @@
- isc_aes256_crypt(const unsigned char *key, const unsigned char *in,
- 		 unsigned char *out)
- {
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- 	EVP_CIPHER_CTX _context;
- #endif
- 	EVP_CIPHER_CTX *c;
---- lib/isc/sha1.c.orig
-+++ lib/isc/sha1.c
-@@ -50,7 +50,7 @@
- #endif
- 
- #ifdef ISC_PLATFORM_OPENSSLHASH
--#if OPENSSL_VERSION_NUMBER < 0x10100000L
-+#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
- #define EVP_MD_CTX_new() &(context->_ctx)
- #define EVP_MD_CTX_free(ptr) EVP_MD_CTX_cleanup(ptr)
- #endif
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ /* From OpenSSL 1.1.0 */
+ static int
+ RSA_set0_key(RSA *r, BIGNUM *n, BIGNUM *e, BIGNUM *d) {

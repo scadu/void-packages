@@ -12,6 +12,7 @@ homepage="https://www.isc.org/software/bind/"
 distfiles="https://ftp.isc.org/isc/bind9/${_fullver}/bind-${_fullver}.tar.gz"
 checksum=17bbcd2bd7b1d32f5ba4b30d5dbe8a39bce200079048073d1e0d050fdf47e69d
 
+patch_args="-p1"
 build_options="geoip seccomp"
 build_options_default="geoip"
 
